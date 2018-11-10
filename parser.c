@@ -9,7 +9,7 @@ DLList *makeDLList(customer *, DLList *, DLList *);
 void printDLList(DLList *);
 void printList(DLList *);
 void freeLList(DLList *);
-void append(struct DLList **head_ref, customer * newCustomer);
+void append(struct DLList **head_ref, customer *newCustomer);
 DLList *readFile(char *fileName);
 
 const int LINE_LEN = 2000;
@@ -84,8 +84,6 @@ void freeCustomer(customer *t) {
 
 DLList *readFile(char *fileName) {
 
-
-
   FILE *fp = fopen(fileName, "r");
   if (fp == NULL) {
     printf("Could not open file\n");
@@ -103,7 +101,7 @@ DLList *readFile(char *fileName) {
       return NULL;
     }
 
-    customer * c = parseLine(tmp, line);
+    customer *c = parseLine(tmp, line);
     // printCustomer(c);
     // printf("phoen: %ld\n", c->phone);
     append(listPtr, c);
@@ -118,7 +116,7 @@ DLList *readFile(char *fileName) {
 
 /* Given a reference (pointer to pointer) to the head
    of a DLL and an int, appends a new node at the end  */
-void append(struct DLList **head_ref, customer * newCustomer) {
+void append(struct DLList **head_ref, customer *newCustomer) {
   /* 1. allocate node */
   struct DLList *new_node = makeDLList(newCustomer, NULL, NULL);
 
@@ -152,7 +150,7 @@ void append(struct DLList **head_ref, customer * newCustomer) {
 /*
  * allocates a node with given flight and returns the node
  */
-DLList *makeDLList(customer * c, DLList *next, DLList *prev) {
+DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
   DLList *np = (DLList *)malloc(sizeof(struct DLList));
   np->data = (struct customer *)malloc(sizeof(struct customer));
   np->data->fname = c->fname;
