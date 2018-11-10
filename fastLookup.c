@@ -32,9 +32,10 @@ int main(int argc, char *argv[]) {
   }
   // start_t = clock();
   DLList *list = (DLList *)readFile(argv[1]);
-  //end_t = clock();
+  // end_t = clock();
 
-  //printf("It took= %ld seconds to load the file\n ", (long double)(end_t - start_t) / CLOCKS_PER_SEC);
+  // printf("It took= %ld seconds to load the file\n ", (long double)(end_t -
+  // start_t) / CLOCKS_PER_SEC);
 
   printf("------------------------------------------------------\n");
 
@@ -58,9 +59,9 @@ int main(int argc, char *argv[]) {
 
     customer *res2 = searchTreeByPhone(phoneTree, phone);
 
-    //end_t = clock();
+    // end_t = clock();
 
-    //total1_t =  (float)(end_t - start_t) / CLOCKS_PER_SEC;
+    // total1_t =  (float)(end_t - start_t) / CLOCKS_PER_SEC;
 
     if (res != NULL) {
       printf("searching for customer in linked list\n");
@@ -69,15 +70,16 @@ int main(int argc, char *argv[]) {
       start_t = clock();
       time_t s = start_t;
 
-      //customer *res = searchList(list, name);
+      // customer *res = searchList(list, name);
 
       end_t = clock();
       time_t e = end_t;
       // printf("end time: %ld\n", end_t);
 
-      //total2_t =  (long double)(end_t - start_t) / CLOCKS_PER_SEC;
+      // total2_t =  (long double)(end_t - start_t) / CLOCKS_PER_SEC;
 
-      printf("Search by name using tree took %Lf seconds, st %ld en %ld and searching DLList \n",
+      printf("Search by name using tree took %Lf seconds, st %ld en %ld and "
+             "searching DLList \n",
              //"took: %ld\n",
              (long double)(end_t - start_t) / CLOCKS_PER_SEC, s, e);
       printCustomer(res);
@@ -205,6 +207,7 @@ TNode *newTNode(DLList *d, int isPhone) {
 
   toReturn->left = NULL;
   toReturn->right = NULL;
+
   return toReturn;
 }
 
