@@ -10,7 +10,7 @@ void printDLList(DLList *);
 void printList(DLList *);
 void freeLList(DLList *);
 void append(struct DLList **head_ref, customer * newCustomer);
-DLList *readFile(char *fileName[]);
+DLList *readFile(char *fileName);
 
 const int LINE_LEN = 2000;
 // prints all fields of the customer struct
@@ -82,7 +82,9 @@ void freeCustomer(customer *t) {
   free(t);
 }
 
-DLList *readFile(char *fileName[]) {
+DLList *readFile(char *fileName) {
+
+
 
   FILE *fp = fopen(fileName, "r");
   if (fp == NULL) {
@@ -110,7 +112,7 @@ DLList *readFile(char *fileName[]) {
   }
   fclose(fp);
   // printf("printing list:--------------------------\n\n");
-  // printList(*listPtr);
+  printList(*listPtr);
   return *listPtr;
 }
 

@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <readline/history.h>
+#include <readline/readline.h>
 #include <time.h>
 #include "structs.h"
 
-customer *searchTreeByNumber(TNode *tree, long int number);
+customer *searchTreeByPhone(TNode *tree, long int number);
 customer *searchTreeByName(TNode *tree, char *name);
 TNode *createNameTree(DLList *list);
 TNode *createPhoneTree(DLList *list);
@@ -13,11 +15,13 @@ void printR(int n, TNode *t);
 void print(TNode *t);
 void printWithTab(int n, customer *data);
 void printList(DLList *list);
-DLList *readFile(char *fileName[]);
+DLList *readFile(char *fileName);
 void printCustomer(customer *c);
 void insertTree(DLList *d, TNode **tptr);
 TNode *newTNode(DLList *d, int isPhone);
 int commands(DLList **listPtr);
+customer *searchList(DLList *list, char *name);
+void sleep(int);
 
 int main(int argc, char *argv[]) {
   clock_t start_t, end_t, total1_t, total2_t;
@@ -26,11 +30,11 @@ int main(int argc, char *argv[]) {
     printf("wrong number of arguments. Usage ./fastLookup fileName\n");
     return -1;
   }
-  start_t = clock();
+  // start_t = clock();
   DLList *list = (DLList *)readFile(argv[1]);
-  end_t = clock();
-  printf("It took= %ld seconds to load the file\n ",
-         (double)(end_t - start_t) / CLOCKS_PER_SEC);
+  //end_t = clock();
+
+  //printf("It took= %ld seconds to load the file\n ", (long double)(end_t - start_t) / CLOCKS_PER_SEC);
 
   printf("------------------------------------------------------\n");
 
@@ -42,40 +46,64 @@ int main(int argc, char *argv[]) {
   TNode *phoneTree = createPhoneTree(list);
   // print(phoneTree);
 
-  char *name = "Nestle";
+  char *name = "Motley";
+  long int phone = 4074134842;
 
-  customer *v = searchTreeByName(nameTree, name);
+  char action = getchar();
 
-  if (v == NULL) {
-    printf("customer not found\n");
-  } else {
-    printf("Found customer with last name \"%s\":\n", name);
-    printCustomer(v);
+  if (action == 'd') {
+    // start_t = clock();
+
+    customer *res = searchTreeByName(nameTree, name);
+
+    customer *res2 = searchTreeByPhone(phoneTree, phone);
+
+    //end_t = clock();
+
+    //total1_t =  (float)(end_t - start_t) / CLOCKS_PER_SEC;
+
+    if (res != NULL) {
+      printf("searching for customer in linked list\n");
+      // printCustomer(res);
+
+      start_t = clock();
+      time_t s = start_t;
+
+      //customer *res = searchList(list, name);
+
+      end_t = clock();
+      time_t e = end_t;
+      // printf("end time: %ld\n", end_t);
+
+      //total2_t =  (long double)(end_t - start_t) / CLOCKS_PER_SEC;
+
+      printf("Search by name using tree took %Lf seconds, st %ld en %ld and searching DLList \n",
+             //"took: %ld\n",
+             (long double)(end_t - start_t) / CLOCKS_PER_SEC, s, e);
+      printCustomer(res);
+      printf("Customer 2 (by phone):\n");
+      printCustomer(res2);
+    } else {
+      printf("Customer not found\n");
+    }
   }
-
-  // while(true){
-  //         char action = getchar();
-
-  // if d
-  // start_t = clock();
-  // customer* res = searchTreeByName(nameTree, searchName);
-  // end_t = clock();
-  // total1_t = (double)(end_t - start_t) / CLOCKS_PER_SEC);
-  // if(res!=NULL){
-  // printCustomer(res);
-  // start_t = clock();
-  // customer* res = searchLListByName(list, searchName);
-  // end_t = clock();
-  // total2_t = (double)(end_t - start_t) / CLOCKS_PER_SEC);
-  //}else
-  // printf("Customer not found\n");
-  // printf("Search by name using tree took %ld seconds, and searching DLList
-  // took: %ld\n",total1_t, total2_t);
-
-  //}
 }
 
-int commands(DLlist **listPtr) {
+customer *searchList(DLList *list, char *name) {
+  if (list == NULL) {
+    printf("list is empty\n");
+    return NULL;
+  }
+
+  while (list != NULL) {
+    if (strcmp(list->data->lname, name) == 0) {
+      return list->data;
+    }
+    list = list->next;
+  }
+}
+
+int commands(DLList **listPtr) {
   char *token, *filename, c, lineCopy[255], line2[255];
   char *line = (char *)NULL;
 
@@ -96,20 +124,22 @@ int commands(DLlist **listPtr) {
 
   // switch statement for handling commands
   switch (c) {
-  case '\n':
-    break;
-  case 'd':
-    // delete flight given flight number
-    deleteFlight(listPtr, lineCopy);
+  case 'n':
+    // search for customer by name
     break;
   case 'p':
-    printList(*listPtr); // print the flight list
+    // search and return the customer by phone number
+    // deleteFlight(listPtr, lineCopy);
+    break;
+  case 'd':
+    // todo delete customer by name from the tree and the linked list
     break;
   case 'q':
-    printf("\nQuitting flight tracker...\n");
-    printList(*listPtr); // print list
-    freeLList(*listPtr); // free linked list
+    printf("\nQuitting...\n");
+    // todo FREE
     exit(0);
+    break;
+  case '\n':
     break;
   default:
     printf("\nInvalid command \"%c\".\n", c);
@@ -118,22 +148,22 @@ int commands(DLlist **listPtr) {
   return commands(listPtr); // call commands again
 }
 
-customer *searchTreeByPhone(TNode *tree, long int phone) {
+customer *searchTreeByPhone(TNode *tree, long int phoneNum) {
   // printf("searching name tree for %s...\n", name);
   if (tree == NULL) {
-    printf("Customer with phone number %ld not found.\n", phone);
+    printf("Customer with phone number %ld not found.\n", phoneNum);
     return NULL;
   }
   // check if found customer
-  if (tree->phone == phone) {
-    printf("Customer with phone number %ld found.\n", phone);
+  if (tree->phone == phoneNum) {
+    printf("Customer with phone number %ld found.\n", phoneNum);
     return tree->data->data;
   }
   // if name we're searching for is after the root name go right
-  if (tree->phone < phone) {
-    return searchTreeByName(tree->left, phone);
+  if (tree->phone < phoneNum) {
+    return searchTreeByPhone(tree->left, phoneNum);
   } else {
-    return searchTreeByName(tree->right, phone);
+    return searchTreeByPhone(tree->right, phoneNum);
   }
 }
 
@@ -164,15 +194,17 @@ customer *searchTreeByName(TNode *tree, char *name) {
 TNode *newTNode(DLList *d, int isPhone) {
   TNode *toReturn = (TNode *)malloc(sizeof(TNode));
   toReturn->data = (DLList *)malloc(sizeof(DLList));
+
   toReturn->data = d;
+
   if (isPhone) {
     toReturn->phone = d->data->phone;
   } else {
     toReturn->lname = d->data->lname;
   }
+
   toReturn->left = NULL;
   toReturn->right = NULL;
-  // printf("toReturn lname: %s\n", toReturn->lname);
   return toReturn;
 }
 
@@ -209,7 +241,8 @@ void insertTreePhone(DLList *d, TNode **tptr) {
     printR(0, *tptr);
     return;
   }
-  // check valSue of t to see if new node should be to the right or left of curr
+  // check valSue of t to see if new node should be to the right or left of
+  // curr
   while (curr != NULL) {
     if (d->data->phone > curr->data->data->phone) { // goes to left
       if (curr->left == NULL) {
@@ -236,7 +269,8 @@ void insertTree(DLList *d, TNode **tptr) {
   // create new node for data
   TNode *toInsert = newTNode(d, 0);
   // printf("toInsert->data->data->name: %s\n", toInsert->data->data->lname);
-  // printf("toInsert->data->data->phone: %ld\n", toInsert->data->data->phone);
+  // printf("toInsert->data->data->phone: %ld\n",
+  // toInsert->data->data->phone);
 
   TNode *curr = *tptr;
   if (curr == NULL) {
@@ -244,7 +278,8 @@ void insertTree(DLList *d, TNode **tptr) {
     printR(0, *tptr);
     return;
   }
-  // check valSue of t to see if new node should be to the right or left of curr
+  // check valSue of t to see if new node should be to the right or left of
+  // curr
   while (curr != NULL) {
     if (strcmp(d->data->lname, curr->data->data->lname) > 0) { // goes to left
       if (curr->left == NULL) {
