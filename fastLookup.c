@@ -30,12 +30,12 @@ int main(int argc, char *argv[]) {
     printf("wrong number of arguments. Usage ./fastLookup fileName\n");
     return -1;
   }
-  // start_t = clock();
+  start_t = clock();
   DLList *list = (DLList *)readFile(argv[1]);
-  // end_t = clock();
+  end_t = clock();
 
-  // printf("It took= %ld seconds to load the file\n ", (long double)(end_t -
-  // start_t) / CLOCKS_PER_SEC);
+  printf("It took= %LF seconds to load the file\n ", (long double)(end_t -
+  start_t) / CLOCKS_PER_SEC);
 
   printf("------------------------------------------------------\n");
 
