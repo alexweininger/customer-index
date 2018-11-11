@@ -86,7 +86,7 @@ DLList *readFile(char *fileName) {
     customer *c = parseLine(tmp, line);
     // printCustomer(c);
     // printf("phoen: %ld\n", c->phone);
-    append(listPtr, c);
+    insertTail(listPtr, c);
 
     // freeCustomer(tmp); //for testing purposes, comment out as needed
   }
@@ -98,7 +98,7 @@ DLList *readFile(char *fileName) {
 
 /* Given a reference (pointer to pointer) to the head
    of a DLL and an int, appends a new node at the end  */
-void append(struct DLList **head_ref, customer *newCustomer) {
+void insertTail(struct DLList **head_ref, customer *newCustomer) {
 
   // allocate new node
   struct DLList *new_node = makeDLList(newCustomer, NULL, NULL);
@@ -129,28 +129,28 @@ void deleteByName(DLList ** listPtr, char * name) {
   DLList *node = NULL;
   node = searchListByName(*listPtr, name);
 
-  printf("here 2\n");
+  if (node == NULL) {
+    printf("Could not find customer. Did not delete.\n");
+    return;
+  }
 
   DLList * prevNode = node->prev;
-
   prevNode->next = node->next;
 
   if (node->next != NULL) {
     node->next->prev = prevNode;
   }
+
+  printf("Deleted customer from list with name: %s\n", name);
 }
 
 DLList * searchListByName(DLList * list, char * name) {
-  printf("Searching for customer with name: %s\n", name);
-
   while (list != NULL) {
     if (strcmp(list->data->lname, name) == 0) {
-      printf("found customer in list\n");
       return list;
     }
     list = list->next;
   }
-  printf("Did not find customer in list.\n");
   return NULL;
 }
 

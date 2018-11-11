@@ -67,12 +67,15 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     }
 
     printf("Searching for customer with name: %s\n", name);
+
     time_t start_t = clock();
-    customer *cust2 = searchTreeByName(nameTreePtr, name);
+    TNode *cust2Node = searchTreeByName(nameTreePtr, name);
     time_t end_t = clock();
+
     long double t = (long double)(end_t - start_t) / CLOCKS_PER_SEC;
     printf("It took= %LF seconds to find the customer by name.\n ", t);
-    printCustomer(cust2);
+
+    printCustomer(cust2Node->data->data);
     break;
 
   case 'p':
@@ -92,9 +95,11 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     }
 
     printf("Searching for customer with phoneNumber: %ld\n", phoneNumber);
+
     start_t = clock();
     customer *cust = searchTreeByPhone(phoneTreePtr, phoneNumber);
     end_t = clock();
+
     long double tt = (long double)(end_t - start_t) / CLOCKS_PER_SEC;
     printf("\nIt took %LF seconds to find customer by phone number.\n\n", t);
     printCustomer(cust);
@@ -108,13 +113,32 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
       break;
     }
 
+    start_t = clock();
+    nameTreePtr = deleteTreeByName(nameTreePtr, name);
+    end_t = clock();
+
+    TNode * check = searchTreeByName(nameTreePtr, name);
+
+    if (check == NULL) {
+      printf("Deleted customer from tree.\n");
+    } else {
+      printf("Customer not found. Did not delete.\n");
+    }
+
+    long double td2 = (long double)(end_t - start_t) / CLOCKS_PER_SEC;
+    printf("\nIt took %LF seconds to delete customer from tree.\n\n", td2);
+
+    start_t = clock();
     deleteByName(customerList, name);
-    deleteTreeByName(&nameTreePtr, customerList, name);
+    end_t = clock();
+
+    long double td1 = (long double)(end_t - start_t) / CLOCKS_PER_SEC;
+    printf("\nIt took %LF seconds to delete customer from list.\n\n", td1);
 
     break;
 
   case 'q':
-    printf("\nQuitting...\n");
+    printf("Quitting...\n");
     freeDLList(*customerList); // free double linked list
     freeTree(nameTreePtr);
     freeTree(phoneTreePtr);
@@ -128,6 +152,5 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     printf("\nInvalid command \"%c\".\n", c);
     break;
   }
-  return commands(nameTreePtr, phoneTreePtr,
-                  customerList); // call commands again
+  return commands(nameTreePtr, phoneTreePtr, customerList);
 }

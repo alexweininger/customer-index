@@ -1,23 +1,46 @@
 #include "tree.h"
 
-void deleteTreeByName(TNode **nameTreePtr, DLList **customerList, char *name) {
+TNode *deleteTreeByName(TNode *nameTreePtr, char *name) {
 
-  DLList *node = NULL;
-  node = searchListByName(*customerList, name);
-
-  printf("here 2\n");
-
-  DLList *prevNode = node->prev;
-
-  prevNode->next = node->next;
-
-  if (node->next != NULL) {
-    node->next->prev = prevNode;
+  if (nameTreePtr == NULL) {
+    return nameTreePtr;
   }
 
-  customer *customer = searchTreeByName(*nameTreePtr, name);
+  if (strcmp(nameTreePtr->data->data->lname, name) < 0) {
 
-  freeCustomer(customer);
+    nameTreePtr->left = deleteTreeByName(nameTreePtr->left, name);
+
+  } else if (strcmp(nameTreePtr->data->data->lname, name) > 0) {
+
+    nameTreePtr->right = deleteTreeByName(nameTreePtr->right, name);
+
+  } else { // found the node to delete
+    // check if node is a leaf or only
+    if (nameTreePtr->left == NULL) {
+      TNode *temp = nameTreePtr->right;
+      free(nameTreePtr);
+      return temp;
+    } else if (nameTreePtr->right == NULL) {
+      TNode *temp = nameTreePtr->left;
+      free(nameTreePtr);
+      return temp;
+    }
+
+    TNode *temp = getSmallestNode(nameTreePtr->right);
+    nameTreePtr->data = temp->data;
+    nameTreePtr->right = deleteTreeByName(nameTreePtr->right, temp->data->data->lname);
+  }
+  return nameTreePtr;
+}
+
+TNode *getSmallestNode(TNode *node) {
+  TNode *current = node;
+
+  /* loop down to find the leftmost leaf */
+  while (current->left != NULL)
+    current = current->left;
+
+  return current;
 }
 
 customer *searchTreeByPhone(TNode *tree, long int phoneNum) {
@@ -39,15 +62,13 @@ customer *searchTreeByPhone(TNode *tree, long int phoneNum) {
   }
 }
 
-customer *searchTreeByName(TNode *tree, char *name) {
-  // printf("searching name tree for %s...\n", name);
+TNode *searchTreeByName(TNode *tree, char *name) {
   if (tree == NULL) {
-    printf("Name not found, returning NULL.\n");
     return NULL;
   }
 
   if (!strcmp(tree->lname, name)) {
-    return tree->data->data;
+    return tree;
   }
   // if name we're searching for is before the root name go left
   if (strcmp(tree->data->data->lname, name) < 0) {
