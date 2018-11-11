@@ -128,11 +128,13 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     long double td2 = (long double)(end_t - start_t) / CLOCKS_PER_SEC;
     printf("\nIt took %LF seconds to delete customer from tree.\n\n", td2);
 
-    start_t = clock();
+    clock_t start_tDelete = clock();
     deleteByName(customerList, name);
-    end_t = clock();
+    clock_t end_tDelete = clock();
 
-    long double td1 = (long double)(end_t - start_t) / CLOCKS_PER_SEC;
+    printf("s: %ld, e: %ld\n", start_tDelete, end_tDelete);
+
+    long double td1 = (long double)(end_tDelete - start_tDelete) / CLOCKS_PER_SEC;
     printf("\nIt took %LF seconds to delete customer from list.\n\n", td1);
 
     break;
