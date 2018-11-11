@@ -8,7 +8,7 @@ DLList *deleteDLList(DLList **, DLList *, DLList *, int);
 DLList *makeDLList(customer *, DLList *, DLList *);
 void printDLList(DLList *);
 void printList(DLList *);
-void freeLList(DLList *);
+void freeDLList(DLList *);
 void append(struct DLList **head_ref, customer *newCustomer);
 DLList *readFile(char *fileName);
 
@@ -17,17 +17,8 @@ const int LINE_LEN = 2000;
 void printCustomer(customer *t) {
   if (t != NULL) {
     printf("%s, %s, %s, %s, %s, %s, %s, %s, %ld, %ld, %s, %s\n", t->fname,
-           t->lname,
-           t->company,
-           t->address,
-           t->city,
-           t->county,
-           t->state,
-           t->zip,
-           t->phone,
-           t->fax,
-           t->email,
-           t->web);
+           t->lname, t->company, t->address, t->city, t->county, t->state,
+           t->zip, t->phone, t->fax, t->email, t->web);
   }
 }
 /*
@@ -93,7 +84,7 @@ DLList *readFile(char *fileName) {
   DLList *top = NULL;
   DLList **listPtr = &top;
 
-  char line[LINE_LEN]; //temporary stack buffer to read lines into
+  char line[LINE_LEN]; // temporary stack buffer to read lines into
   while (fgets(line, LINE_LEN, fp)) {
     customer *tmp = malloc(sizeof(struct customer));
     if (tmp == NULL) {
@@ -110,39 +101,34 @@ DLList *readFile(char *fileName) {
   }
   fclose(fp);
   // printf("printing list:--------------------------\n\n");
-  printList(*listPtr);
+  // printList(*listPtr);
   return *listPtr;
 }
 
 /* Given a reference (pointer to pointer) to the head
    of a DLL and an int, appends a new node at the end  */
 void append(struct DLList **head_ref, customer *newCustomer) {
-  /* 1. allocate node */
+
+  // allocate new node
   struct DLList *new_node = makeDLList(newCustomer, NULL, NULL);
 
-  struct DLList *last = *head_ref; /* used in step 5*/
+  struct DLList *last = *head_ref;
 
-  /* 2. put in the data  */
-
-  /* 3. This new node is going to be the last node, so
-          make next of it as NULL*/
-
-  /* 4. If the Linked List is empty, then make the new
-          node as head */
+  // if the list is empty set the new nodes prev pointer to NULL
   if (*head_ref == NULL) {
     new_node->prev = NULL;
     *head_ref = new_node;
     return;
   }
 
-  /* 5. Else traverse till the last node */
+  // go to the last node of the dllist
   while (last->next != NULL)
     last = last->next;
 
-  /* 6. Change the next of last node */
+  // set the last node's next pointer to the new node
   last->next = new_node;
 
-  /* 7. Make last node as previous of new node */
+  // set the new node's prev pointer to the current last node
   new_node->prev = last;
 
   return;
@@ -151,8 +137,10 @@ void append(struct DLList **head_ref, customer *newCustomer) {
  * allocates a node with given flight and returns the node
  */
 DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
+
   DLList *np = (DLList *)malloc(sizeof(struct DLList));
   np->data = (struct customer *)malloc(sizeof(struct customer));
+
   np->data->fname = c->fname;
   np->data->lname = c->lname;
   np->data->company = c->company;
@@ -165,18 +153,20 @@ DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
   np->data->zip = c->zip;
   np->data->email = c->email;
   np->data->web = c->web;
+
   np->next = prev;
   np->prev = prev;
+
   return np;
 }
 
 /*
- * prints the linked list of flights
+ * prints the linked list of customers
  */
 void printList(DLList *node) {
 
   if (node == NULL) {
-    printf("list is null\n");
+    printf("customer list is null\n");
     return;
   }
 
@@ -189,9 +179,9 @@ void printList(DLList *node) {
 }
 
 /*
- * frees the linked list of flights
+ * frees the linked list of customers
  */
-void freeLList(DLList *top) {
+void freeDLList(DLList *top) {
   DLList *curr = top;
   DLList *temp = NULL;
   while (curr != NULL) {

@@ -157,12 +157,12 @@ customer *searchTreeByPhone(TNode *tree, long int phoneNum) {
     return NULL;
   }
   // check if found customer
-  if (tree->phone == phoneNum) {
+  if (tree->data->data->phone == phoneNum) {
     printf("Customer with phone number %ld found.\n", phoneNum);
     return tree->data->data;
   }
   // if name we're searching for is after the root name go right
-  if (tree->phone < phoneNum) {
+  if (tree->data->data->phone < phoneNum) {
     return searchTreeByPhone(tree->left, phoneNum);
   } else {
     return searchTreeByPhone(tree->right, phoneNum);
