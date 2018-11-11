@@ -107,6 +107,8 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
       printf("Please enter a name to search for.\n");
       break;
     }
+
+    deleteByName(customerList, name);
     deleteTreeByName(&nameTreePtr, customerList, name);
 
     break;

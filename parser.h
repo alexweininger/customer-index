@@ -1,13 +1,12 @@
-/**
- * list.c
- *
- * file for creating a doubly linked list
- */
+#include "structs.h"
 
-// function declarations
-DLList *insert(DLList **, DLList *, DLList *, DLList *);
+void insertTail(DLList **listPtr, customer *c);
 DLList *deleteDLList(DLList **, DLList *, DLList *, int);
-DLList *makeDLList(customer);
+DLList *makeDLList(customer *, DLList *, DLList *);
 void printDLList(DLList *);
 void printList(DLList *);
-void freeLList(DLList *);
+void freeDLList(DLList *);
+void append(struct DLList **head_ref, customer *newCustomer);
+DLList *readFile(char *fileName);
+DLList * searchListByName(DLList * list, char * name);
+void deleteByName(DLList **, char *);

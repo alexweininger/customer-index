@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "structs.h"
+#include "parser.h"
 
 customer *searchTreeByPhone(TNode *tree, long int number);
 customer *searchTreeByName(TNode *tree, char *name);

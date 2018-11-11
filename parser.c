@@ -1,17 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "structs.h"
-
-void insertTail(DLList **listPtr, customer *c);
-DLList *deleteDLList(DLList **, DLList *, DLList *, int);
-DLList *makeDLList(customer *, DLList *, DLList *);
-void printDLList(DLList *);
-void printList(DLList *);
-void freeDLList(DLList *);
-void append(struct DLList **head_ref, customer *newCustomer);
-DLList *readFile(char *fileName);
-DLList * searchListByName(DLList * list, char * name);
+#include "parser.h"
 
 const int LINE_LEN = 2000;
 // prints all fields of the customer struct
@@ -135,7 +125,7 @@ void append(struct DLList **head_ref, customer *newCustomer) {
   return;
 }
 
-DLList deleteByName(DLList ** listPtr, char * name) {
+void deleteByName(DLList ** listPtr, char * name) {
   DLList *node = NULL;
   node = searchListByName(*listPtr, name);
 
