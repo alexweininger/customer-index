@@ -11,6 +11,7 @@ void printList(DLList *);
 void freeDLList(DLList *);
 void append(struct DLList **head_ref, customer *newCustomer);
 DLList *readFile(char *fileName);
+DLList * searchListByName(DLList * list, char * name);
 
 const int LINE_LEN = 2000;
 // prints all fields of the customer struct
@@ -133,6 +134,36 @@ void append(struct DLList **head_ref, customer *newCustomer) {
 
   return;
 }
+
+DLList deleteByName(DLList ** listPtr, char * name) {
+  DLList *node = NULL;
+  node = searchListByName(*listPtr, name);
+
+  printf("here 2\n");
+
+  DLList * prevNode = node->prev;
+
+  prevNode->next = node->next;
+
+  if (node->next != NULL) {
+    node->next->prev = prevNode;
+  }
+}
+
+DLList * searchListByName(DLList * list, char * name) {
+  printf("Searching for customer with name: %s\n", name);
+
+  while (list != NULL) {
+    if (strcmp(list->data->lname, name) == 0) {
+      printf("found customer in list\n");
+      return list;
+    }
+    list = list->next;
+  }
+  printf("Did not find customer in list.\n");
+  return NULL;
+}
+
 /*
  * allocates a node with given flight and returns the node
  */
@@ -187,7 +218,7 @@ void freeDLList(DLList *top) {
   while (curr != NULL) {
     temp = curr;
     curr = curr->next;
-    free(temp->data);
+    freeCustomer(temp->data);
     free(temp);
   }
 }

@@ -1,6 +1,8 @@
 {
 	"files.associations": {
 		"structs.h": "c",
-		"typeinfo": "c"
+		"typeinfo": "c",
+		"stdlib.h": "c",
+		"readline.h": "c"
 	}
 }
