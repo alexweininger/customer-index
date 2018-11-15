@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
     printf("Wrong number of arguments. Use ./fs fileName\n");
     return -1;
   }
+
   gettimeofday(&start, NULL);
   DLList *list = (DLList *)readFile(argv[1]);
   gettimeofday(&end, NULL);
@@ -26,18 +27,14 @@ int main(int argc, char *argv[]) {
 
   printf("------------------------------------------------------\n\n");
 
-  TNode *nameTree = createNameTree(list); // make a search tree by name
-  print(nameTree);
-
+  TNode *nameTree = createNameTree(list);   // make a search tree by name
   TNode *phoneTree = createPhoneTree(list); // make a phone tree
-  // print(phoneTree);
-
-  commands(nameTree, phoneTree, &list);
+  commands(nameTree, phoneTree, &list);     // start the user input loop
 }
 
 int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
-  struct timeval start, end;
-  unsigned long long total;
+  struct timeval start, end; // time structs
+  unsigned long long total;  // total time
 
   char *token, *filename, c, lineCopy[255], line2[255], *phoneStr, *name;
   char *line = (char *)NULL;
@@ -47,10 +44,8 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
   phoneNumber = -1;
 
   line = (char *)readline("> ");
-
-  if (!line) {
+  if (!line)
     return commands(nameTreePtr, phoneTreePtr, customerList);
-  }
 
   strncpy(lineCopy, line, 254); // make copy of line for later
   strncpy(line2, line, 254);    // make copy of line for later
@@ -65,8 +60,7 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
 
   // switch statement for handling commands
   switch (c) {
-  case 'n':
-    // search and return the customer by name
+  case 'n': // search and return the customer by name
     name = strtok(lineCopy, " ");
     name = strtok(NULL, " ");
     if (name == "") {
@@ -75,7 +69,6 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     }
 
     printf("Searching for customer with name: %s\n", name);
-
     gettimeofday(&start, NULL);
     TNode *cust2Node = searchTreeByName(nameTreePtr, name);
     gettimeofday(&end, NULL);
@@ -96,9 +89,7 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     }
     break;
 
-  case 'p':
-    // search and return the customer by phone number
-
+  case 'p': // search and return the customer by phone number
     phoneStr = strtok(lineCopy, " ");
     phoneStr = strtok(NULL, " ");
 
@@ -122,14 +113,14 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
          (unsigned long long)start.tv_sec * 1000000ULL) +
         ((unsigned long long)end.tv_usec - (unsigned long long)start.tv_usec);
     if (cust != NULL) {
-      printf("It took %ld uS to find the customer.\n", total);
+      printf("It took %ld uS to find the customer by phone.\n", total);
       printCustomer(cust);
     } else {
       printf("It took %ld uS to try and find the customer.\n", total);
     }
     break;
 
-  case 'd':
+  case 'd': // delete customer by name
     name = strtok(lineCopy, " ");
     name = strtok(NULL, " ");
     if (name == "") {
@@ -138,9 +129,7 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     }
 
     gettimeofday(&start, NULL);
-
     deleteByName(customerList, name);
-
     gettimeofday(&end, NULL);
     total =
         ((unsigned long long)end.tv_sec * 1000000ULL -
@@ -151,9 +140,7 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
         total);
 
     gettimeofday(&start, NULL);
-
     nameTreePtr = deleteTreeByName(nameTreePtr, name);
-
     gettimeofday(&end, NULL);
     total =
         ((unsigned long long)end.tv_sec * 1000000ULL -
@@ -171,12 +158,9 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
              "name.\n",
              total);
     }
-
-    // print(nameTreePtr);
-
     break;
 
-  case 'q':
+  case 'q': // quit and free linked list
     printf("Quitting...\n");
     freeDLList(*customerList); // free double linked list
     freeTree(nameTreePtr);
@@ -184,12 +168,12 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     exit(0);
     break;
 
-  case '\n':
+  case '\n': // new line
     break;
 
-  default:
+  default: // invalid command
     printf("\nInvalid command \"%c\".\n", c);
     break;
   }
-  return commands(nameTreePtr, phoneTreePtr, customerList);
+  return commands(nameTreePtr, phoneTreePtr, customerList); // loop
 }
