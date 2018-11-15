@@ -8,5 +8,5 @@ void printList(DLList *);
 void freeDLList(DLList *);
 void insertTail(struct DLList **head_ref, customer *newCustomer);
 DLList *readFile(char *fileName);
-DLList * searchListByName(DLList * list, char * name);
+DLList *searchListByName(DLList *list, char *name);
 void deleteByName(DLList **, char *);

@@ -3,7 +3,7 @@
 #include <string.h>
 #include "parser.h"
 
-const int LINE_LEN = 2000;
+const int LINE_LEN = 3000;
 // prints all fields of the customer struct
 void printCustomer(customer *t) {
   if (t != NULL) {
@@ -21,7 +21,6 @@ void printCustomer(customer *t) {
            the tokenized fields (tokens) from stack to heap
 */
 customer *parseLine(customer *t, char *line) {
-  // printf("line: %s \n", line);
   const char *tokens;
   tokens = strtok(line, "\",\"");
   t->fname = strdup(tokens);
@@ -84,15 +83,9 @@ DLList *readFile(char *fileName) {
     }
 
     customer *c = parseLine(tmp, line);
-    // printCustomer(c);
-    // printf("phoen: %ld\n", c->phone);
     insertTail(listPtr, c);
-
-    // freeCustomer(tmp); //for testing purposes, comment out as needed
   }
   fclose(fp);
-  // printf("printing list:--------------------------\n\n");
-  // printList(*listPtr);
   return *listPtr;
 }
 
@@ -125,7 +118,7 @@ void insertTail(struct DLList **head_ref, customer *newCustomer) {
   return;
 }
 
-void deleteByName(DLList ** listPtr, char * name) {
+void deleteByName(DLList **listPtr, char *name) {
   DLList *node = NULL;
   node = searchListByName(*listPtr, name);
 
@@ -134,8 +127,13 @@ void deleteByName(DLList ** listPtr, char * name) {
     return;
   }
 
-  DLList * prevNode = node->prev;
-  prevNode->next = node->next;
+  DLList *prevNode = node->prev;
+  if (prevNode != NULL) {
+    prevNode->next = node->next;
+  } else {
+    printf("prevNode == NULL\n");
+    node->next->prev = NULL;
+  }
 
   if (node->next != NULL) {
     node->next->prev = prevNode;
@@ -144,7 +142,7 @@ void deleteByName(DLList ** listPtr, char * name) {
   printf("Deleted customer from list with name: %s\n", name);
 }
 
-DLList * searchListByName(DLList * list, char * name) {
+DLList *searchListByName(DLList *list, char *name) {
   while (list != NULL) {
     if (strcmp(list->data->lname, name) == 0) {
       return list;

@@ -4,6 +4,7 @@
 		"typeinfo": "c",
 		"stdlib.h": "c",
 		"readline.h": "c",
-		"tree.h": "c"
+		"tree.h": "c",
+		"stdio.h": "c"
 	}
 }
