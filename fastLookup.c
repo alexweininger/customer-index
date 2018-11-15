@@ -1,11 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/time.h>
+/**
+ * fastLookup.c
+ * Alex Weininger
+ * Martin Cenek
+ * 11/14/2018
+ */
+
 #include "tree.h"
 
 int main(int argc, char *argv[]) {

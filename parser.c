@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "parser.h"
 
 const int LINE_LEN = 3000;
