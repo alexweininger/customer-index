@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
   printf("------------------------------------------------------\n\n");
 
   TNode *nameTree = createNameTree(list); // make a search tree by name
-  // print(nameTree);
+  print(nameTree);
 
   TNode *phoneTree = createPhoneTree(list); // make a phone tree
   // print(phoneTree);

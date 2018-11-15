@@ -92,10 +92,8 @@ DLList *readFile(char *fileName) {
 /* Given a reference (pointer to pointer) to the head
    of a DLL and an int, appends a new node at the end  */
 void insertTail(struct DLList **head_ref, customer *newCustomer) {
-
   // allocate new node
   struct DLList *new_node = makeDLList(newCustomer, NULL, NULL);
-
   struct DLList *last = *head_ref;
 
   // if the list is empty set the new nodes prev pointer to NULL
@@ -114,7 +112,6 @@ void insertTail(struct DLList **head_ref, customer *newCustomer) {
 
   // set the new node's prev pointer to the current last node
   new_node->prev = last;
-
   return;
 }
 
@@ -135,18 +132,15 @@ void deleteByName(DLList **listPtr, char *name) {
     node->next->prev = NULL;
   }
 
-  if (node->next != NULL) {
+  if (node->next != NULL)
     node->next->prev = prevNode;
-  }
-
   printf("Deleted customer from list with name: %s\n", name);
 }
 
 DLList *searchListByName(DLList *list, char *name) {
   while (list != NULL) {
-    if (strcmp(list->data->lname, name) == 0) {
+    if (strcmp(list->data->lname, name) == 0)
       return list;
-    }
     list = list->next;
   }
   return NULL;
@@ -156,7 +150,6 @@ DLList *searchListByName(DLList *list, char *name) {
  * allocates a node with given flight and returns the node
  */
 DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
-
   DLList *np = (DLList *)malloc(sizeof(struct DLList));
   np->data = (struct customer *)malloc(sizeof(struct customer));
 
@@ -175,7 +168,6 @@ DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
 
   np->next = prev;
   np->prev = prev;
-
   return np;
 }
 
@@ -183,12 +175,10 @@ DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
  * prints the linked list of customers
  */
 void printList(DLList *node) {
-
   if (node == NULL) {
     printf("customer list is null\n");
     return;
   }
-
   printf("\n----- Customer list -----\n");
   while (node != NULL) {
     printCustomer(node->data);

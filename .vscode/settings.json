@@ -5,6 +5,7 @@
 		"stdlib.h": "c",
 		"readline.h": "c",
 		"tree.h": "c",
-		"stdio.h": "c"
+		"stdio.h": "c",
+		"parser.h": "c"
 	}
 }
