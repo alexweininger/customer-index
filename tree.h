@@ -20,12 +20,9 @@ void freeTree(TNode *);
 DLList *searchListByName(DLList *list, char *name);
 void printList(DLList *list);
 void freeCustomer(customer *t);
-
 DLList *readFile(char *fileName);
 void printCustomer(customer *c);
-
 int commands(TNode *, TNode *, DLList **);
 void freeDLList(DLList *top);
-
 void traverseInOrder(TNode *);
 TNode *getSmallestNode(TNode *node);

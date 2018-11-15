@@ -2,6 +2,8 @@
 
 TNode *deleteTreeByName(TNode *nameTreePtr, char *name) {
 
+  printf("nameTreePtr=%s\n", nameTreePtr->data->data->lname);
+
   if (nameTreePtr == NULL) {
     return nameTreePtr;
   }
@@ -15,31 +17,42 @@ TNode *deleteTreeByName(TNode *nameTreePtr, char *name) {
     nameTreePtr->right = deleteTreeByName(nameTreePtr->right, name);
 
   } else { // found the node to delete
-    // check if node is a leaf or only
+           // check if node is a leaf or only
+
+    printf("nameTreePtr=%s found match with %s\n", nameTreePtr->data->data->lname, name);
+
     if (nameTreePtr->left == NULL) {
+      printf("left is null\n");
       TNode *temp = nameTreePtr->right;
       free(nameTreePtr);
       return temp;
     } else if (nameTreePtr->right == NULL) {
+      printf("right is null\n");
       TNode *temp = nameTreePtr->left;
       free(nameTreePtr);
       return temp;
     }
-
-    TNode *temp = getSmallestNode(nameTreePtr->right);
+    TNode *temp = getSmallestNode(nameTreePtr->right->right);
+    printf("temp: %s\n", temp->data->data->lname);
     nameTreePtr->data = temp->data;
-    nameTreePtr->right = deleteTreeByName(nameTreePtr->right, temp->data->data->lname);
+    nameTreePtr->lname = temp->lname;
+    nameTreePtr->right =
+        deleteTreeByName(nameTreePtr->right, temp->data->data->lname);
   }
   return nameTreePtr;
 }
 
 TNode *getSmallestNode(TNode *node) {
   TNode *current = node;
+  printf("getsmallestnode called with: %s\n", node->data->data->lname);
 
   /* loop down to find the leftmost leaf */
-  while (current->left != NULL)
+  while (current->left != NULL) {
+    printf("left left\n");
     current = current->left;
+  }
 
+  printf("getsmallestnode returning: %s\n", current->data->data->lname);
   return current;
 }
 
@@ -67,11 +80,11 @@ TNode *searchTreeByName(TNode *tree, char *name) {
     return NULL;
   }
 
-  if (!strcmp(tree->lname, name)) {
+  if (strcmp(tree->lname, name) == 0) {
     return tree;
   }
   // if name we're searching for is before the root name go left
-  if (strcmp(tree->data->data->lname, name) < 0) {
+  if (strcmp(tree->lname, name) < 0) {
     // printf("%s is right of %s\n", name, tree->lname);
     return searchTreeByName(tree->left, name);
   } else {
