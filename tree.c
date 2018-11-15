@@ -1,3 +1,10 @@
+/**
+ * tree.c
+ * Alex Weininger
+ * 11/14/2018
+ */
+
+
 #include "tree.h"
 
 TNode *deleteTreeByName(TNode *treePtr, char *name) {

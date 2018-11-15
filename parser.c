@@ -1,6 +1,39 @@
-#include "parser.h"
+/**
+ * parser.c
+ * Alex Weininger
+ * Martin Cenek
+ * 11/14/2018
+ */
 
+#include "parser.h"
 const int LINE_LEN = 3000;
+
+DLList *readFile(char *fileName) {
+  FILE *fp = fopen(fileName, "r");
+
+  if (fp == NULL) {
+    printf("Could not open file\n");
+    return NULL;
+  }
+
+  DLList *top = NULL;
+  DLList **listPtr = &top;
+
+  char line[LINE_LEN]; // temporary stack buffer to read lines into
+  while (fgets(line, LINE_LEN, fp)) {
+    customer *tmp = malloc(sizeof(struct customer));
+    if (tmp == NULL) {
+      printf("Could not allocate mamory for a customer\n");
+      return NULL;
+    }
+
+    customer *c = parseLine(tmp, line);
+    insertTail(listPtr, c);
+  }
+  fclose(fp);
+  return *listPtr;
+}
+
 // prints all fields of the customer struct
 void printCustomer(customer *t) {
   if (t != NULL) {
@@ -58,32 +91,6 @@ void freeCustomer(customer *t) {
   free(t->email);
   free(t->web);
   free(t);
-}
-
-DLList *readFile(char *fileName) {
-
-  FILE *fp = fopen(fileName, "r");
-  if (fp == NULL) {
-    printf("Could not open file\n");
-    return NULL;
-  }
-
-  DLList *top = NULL;
-  DLList **listPtr = &top;
-
-  char line[LINE_LEN]; // temporary stack buffer to read lines into
-  while (fgets(line, LINE_LEN, fp)) {
-    customer *tmp = malloc(sizeof(struct customer));
-    if (tmp == NULL) {
-      printf("Could not allocate mamory for a customer\n");
-      return NULL;
-    }
-
-    customer *c = parseLine(tmp, line);
-    insertTail(listPtr, c);
-  }
-  fclose(fp);
-  return *listPtr;
 }
 
 /* Given a reference (pointer to pointer) to the head
