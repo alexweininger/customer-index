@@ -33,6 +33,32 @@ TNode *deleteTreeByName(TNode *treePtr, char *name) {
   return treePtr;
 }
 
+TNode *deleteTreeByPhone(TNode *treePtr, long int phone) {
+  if (treePtr == NULL)
+    return treePtr;
+
+  if (treePtr->data->data->phone < phone) {
+    treePtr->left = deleteTreeByPhone(treePtr->left, phone);
+  } else if (treePtr->data->data->phone > phone) {
+    treePtr->right = deleteTreeByPhone(treePtr->right, phone);
+  } else { // found the node to delete check if node is a leaf or only
+    if (treePtr->left == NULL) {
+      TNode *temp = treePtr->right;
+      free(treePtr);
+      return temp;
+    } else if (treePtr->right == NULL) {
+      TNode *temp = treePtr->left;
+      free(treePtr);
+      return temp;
+    }
+    TNode *temp = getSmallestNode(treePtr->right);
+    treePtr->data = temp->data;
+    treePtr->phone = temp->phone;
+    treePtr->right = deleteTreeByPhone(treePtr->right, temp->data->data->phone);
+  }
+  return treePtr;
+}
+
 /**
  * returns the smallest node in the given tree
  */
@@ -46,16 +72,17 @@ TNode *getSmallestNode(TNode *node) {
 /*
  * search tree by phone number
  */
-customer *searchTreeByPhone(TNode *tree, long int phoneNum) {
+TNode *searchTreeByPhone(TNode *tree, long int phoneNum) {
+  printf("searching by phone\n");
   if (tree == NULL) {
     printf("Customer with phone number %ld not found.\n", phoneNum);
     return NULL;
   }
-  if (tree->data->data->phone == phoneNum) { // check if found customer
+  if (tree->phone == phoneNum) { // check if found customer
     printf("Customer with phone number %ld found.\n", phoneNum);
-    return tree->data->data;
+    return tree;
   }
-  if (tree->data->data->phone < phoneNum)
+  if (tree->phone < phoneNum)
     return searchTreeByPhone(tree->left, phoneNum); // go left
   else
     return searchTreeByPhone(tree->right, phoneNum); // go right
@@ -82,7 +109,6 @@ TNode *searchTreeByName(TNode *tree, char *name) {
  */
 TNode *newTNode(DLList *d, int isPhone) {
   TNode *toReturn = (TNode *)malloc(sizeof(TNode));
-  toReturn->data = (DLList *)malloc(sizeof(DLList));
   toReturn->data = d;
 
   if (isPhone)
@@ -107,8 +133,9 @@ TNode *createNameTree(DLList *list) {
   return toReturn;
 }
 
-TNode *createPhoneTree(DLList *list) {
-  TNode *toReturn = newTNode(list, 1); // insert first item from list
+TNode * createPhoneTree(DLList *list) {
+  // TNode *toReturn = newTNode(list, 1); // insert first item from list
+  TNode *toReturn = NULL;
   while (list != NULL) {
     insertTreePhone(list, &toReturn);
     list = list->next;
@@ -119,13 +146,11 @@ TNode *createPhoneTree(DLList *list) {
  * inserts linked list node into tree
  */
 void insertTreePhone(DLList *d, TNode **tptr) {
-  TNode *toInsert = newTNode(d, 0);
-
+  TNode *toInsert = newTNode(d, 1);
   TNode *curr = *tptr;
 
   if (curr == NULL) {
     *tptr = toInsert;
-    printR(0, *tptr);
     return;
   }
 
@@ -191,10 +216,12 @@ void printR(int n, TNode *t) {
   printR(n + 1, t->left);
 }
 
-void freeTree(TNode *t) {
-  if (t == NULL)
+void freeTree(TNode ** tptr) {
+  if(*tptr == NULL) {
     return;
-  freeTree(t->left);
-  freeTree(t->right);
-  free(t);
+  }
+  freeTree(&(*tptr)->left);
+  freeTree(&(*tptr)->right);
+  *tptr = NULL;
+  free(*tptr);
 }

@@ -27,21 +27,13 @@ DLList *readFile(char *fileName) {
       return NULL;
     }
 
-    customer *c = parseLine(tmp, line);
-    insertTail(listPtr, c);
+    // insert the customer into the list
+    insertTail(listPtr, parseLine(tmp, line));
   }
   fclose(fp);
   return *listPtr;
 }
 
-// prints all fields of the customer struct
-void printCustomer(customer *t) {
-  if (t != NULL) {
-    printf("%s, %s, %s, %s, %s, %s, %s, %s, %ld, %ld, %s, %s\n", t->fname,
-           t->lname, t->company, t->address, t->city, t->county, t->state,
-           t->zip, t->phone, t->fax, t->email, t->web);
-  }
-}
 /*
   parse a line from a file and load the customer object
   strtok - tokenizes the line
@@ -79,26 +71,12 @@ customer *parseLine(customer *t, char *line) {
   return t;
 }
 
-void freeCustomer(customer *t) {
-  free(t->fname);
-  free(t->lname);
-  free(t->company);
-  free(t->address);
-  free(t->city);
-  free(t->county);
-  free(t->state);
-  free(t->zip);
-  free(t->email);
-  free(t->web);
-  free(t);
-}
-
 /* Given a reference (pointer to pointer) to the head
    of a DLL and an int, appends a new node at the end  */
-void insertTail(struct DLList **head_ref, customer *newCustomer) {
+void insertTail(DLList **head_ref, customer *newCustomer) {
   // allocate new node
-  struct DLList *new_node = makeDLList(newCustomer, NULL, NULL);
-  struct DLList *last = *head_ref;
+  DLList *new_node = makeDLList(newCustomer, NULL, NULL);
+  DLList *last = *head_ref;
 
   // if the list is empty set the new nodes prev pointer to NULL
   if (*head_ref == NULL) {
@@ -117,6 +95,31 @@ void insertTail(struct DLList **head_ref, customer *newCustomer) {
   // set the new node's prev pointer to the current last node
   new_node->prev = last;
   return;
+}
+
+/*
+ * allocates a node with given flight and returns the node
+ */
+DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
+  DLList *np = (DLList *)malloc(sizeof(struct DLList));
+  np->data = c;
+
+  np->data->fname = c->fname;
+  np->data->lname = c->lname;
+  np->data->company = c->company;
+  np->data->address = c->address;
+  np->data->city = c->city;
+  np->data->county = c->county;
+  np->data->state = c->state;
+  np->data->phone = c->phone;
+  np->data->fax = c->fax;
+  np->data->zip = c->zip;
+  np->data->email = c->email;
+  np->data->web = c->web;
+
+  np->next = prev;
+  np->prev = prev;
+  return np;
 }
 
 void deleteByName(DLList **listPtr, char *name) {
@@ -141,6 +144,28 @@ void deleteByName(DLList **listPtr, char *name) {
   printf("Deleted customer from list with name: %s\n", name);
 }
 
+void deleteByPhone(DLList **listPtr, long int phone) {
+  DLList *node = NULL;
+  node = searchListByPhone(*listPtr, phone);
+
+  if (node == NULL) {
+    printf("Could not find customer. Did not delete.\n");
+    return;
+  }
+
+  DLList *prevNode = node->prev;
+  if (prevNode != NULL) {
+    prevNode->next = node->next;
+  } else {
+    printf("prevNode == NULL\n");
+    node->next->prev = NULL;
+  }
+
+  if (node->next != NULL)
+    node->next->prev = prevNode;
+  printf("Deleted customer from list with phone: %ld\n", phone);
+}
+
 DLList *searchListByName(DLList *list, char *name) {
   while (list != NULL) {
     if (strcmp(list->data->lname, name) == 0)
@@ -150,29 +175,13 @@ DLList *searchListByName(DLList *list, char *name) {
   return NULL;
 }
 
-/*
- * allocates a node with given flight and returns the node
- */
-DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
-  DLList *np = (DLList *)malloc(sizeof(struct DLList));
-  np->data = (struct customer *)malloc(sizeof(struct customer));
-
-  np->data->fname = c->fname;
-  np->data->lname = c->lname;
-  np->data->company = c->company;
-  np->data->address = c->address;
-  np->data->city = c->city;
-  np->data->county = c->county;
-  np->data->state = c->state;
-  np->data->phone = c->phone;
-  np->data->fax = c->fax;
-  np->data->zip = c->zip;
-  np->data->email = c->email;
-  np->data->web = c->web;
-
-  np->next = prev;
-  np->prev = prev;
-  return np;
+DLList *searchListByPhone(DLList *list, long int phone) {
+  while (list != NULL) {
+    if (list->data->phone == phone)
+      return list;
+    list = list->next;
+  }
+  return NULL;
 }
 
 /*
@@ -203,4 +212,27 @@ void freeDLList(DLList *top) {
     freeCustomer(temp->data);
     free(temp);
   }
+}
+
+// prints all fields of the customer struct
+void printCustomer(customer *t) {
+  if (t != NULL) {
+    printf("%s, %s, %s, %s, %s, %s, %s, %s, %ld, %ld, %s, %s\n", t->fname,
+           t->lname, t->company, t->address, t->city, t->county, t->state,
+           t->zip, t->phone, t->fax, t->email, t->web);
+  }
+}
+
+void freeCustomer(customer *t) {
+  free(t->fname);
+  free(t->lname);
+  free(t->company);
+  free(t->address);
+  free(t->city);
+  free(t->county);
+  free(t->state);
+  free(t->zip);
+  free(t->email);
+  free(t->web);
+  free(t);
 }

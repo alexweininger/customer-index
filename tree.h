@@ -9,21 +9,22 @@
 #include "structs.h"
 #include "parser.h"
 
-customer *searchTreeByPhone(TNode *tree, long int number);
+TNode *searchTreeByPhone(TNode *tree, long int number);
 DLList *readFile(char *fileName);
 DLList *searchListByName(DLList *list, char *name);
-int commands(TNode *, TNode *, DLList **);
+int commands(TNode **, TNode **, DLList **);
 TNode *createNameTree(DLList *list);
 TNode *createPhoneTree(DLList *list);
 TNode *deleteTreeByName(struct TNode *, char *);
+TNode * deleteTreeByPhone(TNode *, long int);
 TNode *getSmallestNode(TNode *node);
 TNode *newTNode(DLList *d, int isPhone);
 TNode *searchTreeByName(TNode *tree, char *name);
 void freeCustomer(customer *t);
 void freeDLList(DLList *top);
-void freeTree(TNode *);
-void insertTreeName(DLList *d, TNode **tptr);
-void insertTreePhone(DLList *d, TNode **tptr);
+void freeTree(TNode **);
+void insertTreeName(DLList *d, TNode **);
+void insertTreePhone(DLList *d, TNode **);
 void print(TNode *t);
 void printCustomer(customer *c);
 void printList(DLList *list);

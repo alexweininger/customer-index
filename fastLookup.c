@@ -28,10 +28,10 @@ int main(int argc, char *argv[]) {
 
   TNode *nameTree = createNameTree(list);   // make a search tree by name
   TNode *phoneTree = createPhoneTree(list); // make a phone tree
-  commands(nameTree, phoneTree, &list);     // start the user input loop
+  commands(&nameTree, &phoneTree, &list);   // start the user input loop
 }
 
-int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
+int commands(TNode **nameTreePtr, TNode **phoneTreePtr, DLList **customerList) {
   struct timeval start, end; // time structs
   unsigned long long total;  // total time
 
@@ -69,7 +69,7 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
 
     printf("Searching for customer with name: %s\n", name);
     gettimeofday(&start, NULL);
-    TNode *cust2Node = searchTreeByName(nameTreePtr, name);
+    TNode *cust2Node = searchTreeByName(*nameTreePtr, name);
     gettimeofday(&end, NULL);
     total =
         ((unsigned long long)end.tv_sec * 1000000ULL -
@@ -105,7 +105,7 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
     printf("Searching for customer with phoneNumber: %ld\n", phoneNumber);
 
     gettimeofday(&start, NULL);
-    customer *cust = searchTreeByPhone(phoneTreePtr, phoneNumber);
+    TNode *cust = searchTreeByPhone(*phoneTreePtr, phoneNumber);
     gettimeofday(&end, NULL);
     total =
         ((unsigned long long)end.tv_sec * 1000000ULL -
@@ -113,7 +113,7 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
         ((unsigned long long)end.tv_usec - (unsigned long long)start.tv_usec);
     if (cust != NULL) {
       printf("It took %ld uS to find the customer by phone.\n", total);
-      printCustomer(cust);
+      printCustomer(cust->data->data);
     } else {
       printf("It took %ld uS to try and find the customer.\n", total);
     }
@@ -122,11 +122,12 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
   case 'd': // delete customer by name
     name = strtok(lineCopy, " ");
     name = strtok(NULL, " ");
+
     if (name == "") {
       printf("Please enter a name to search for.\n");
       break;
     }
-
+    // delete from linked list
     gettimeofday(&start, NULL);
     deleteByName(customerList, name);
     gettimeofday(&end, NULL);
@@ -138,16 +139,61 @@ int commands(TNode *nameTreePtr, TNode *phoneTreePtr, DLList **customerList) {
         "It took %ld uS to delete the customer from the linked list by name.\n",
         total);
 
+    // delete from tree
     gettimeofday(&start, NULL);
-    nameTreePtr = deleteTreeByName(nameTreePtr, name);
+    *nameTreePtr = deleteTreeByName(*nameTreePtr, name);
     gettimeofday(&end, NULL);
     total =
         ((unsigned long long)end.tv_sec * 1000000ULL -
          (unsigned long long)start.tv_sec * 1000000ULL) +
         ((unsigned long long)end.tv_usec - (unsigned long long)start.tv_usec);
 
-    TNode *check = searchTreeByName(nameTreePtr, name);
+    TNode *check = searchTreeByName(*nameTreePtr, name);
     if (check == NULL) {
+      printf("Deleted customer from tree.\n");
+      printf("It took %ld uS to delete the customer from the tree by name.\n",
+             total);
+    } else {
+      printf("Did not delete.\n");
+      printf("It took %ld uS to try and delete the customer from the tree by "
+             "name.\n",
+             total);
+    }
+    break;
+  case 'k': // delete customer by name
+    phoneStr = strtok(lineCopy, " ");
+    phoneStr = strtok(NULL, " ");
+
+    if (phoneStr == NULL) {
+      printf("Please enter a number to search for.\n");
+      break;
+    }
+    phoneNumber = atol(phoneStr);
+    if (phoneNumber == -1) {
+      printf("Please enter a number to search for.\n");
+      break;
+    }
+    gettimeofday(&start, NULL);
+    deleteByPhone(customerList, phoneNumber);
+    gettimeofday(&end, NULL);
+    total =
+        ((unsigned long long)end.tv_sec * 1000000ULL -
+         (unsigned long long)start.tv_sec * 1000000ULL) +
+        ((unsigned long long)end.tv_usec - (unsigned long long)start.tv_usec);
+    printf(
+        "It took %ld uS to delete the customer from the linked list by number.\n",
+        total);
+
+    gettimeofday(&start, NULL);
+    *phoneTreePtr = deleteTreeByPhone(*phoneTreePtr, phoneNumber);
+    gettimeofday(&end, NULL);
+    total =
+        ((unsigned long long)end.tv_sec * 1000000ULL -
+         (unsigned long long)start.tv_sec * 1000000ULL) +
+        ((unsigned long long)end.tv_usec - (unsigned long long)start.tv_usec);
+
+    TNode *check2 = searchTreeByPhone(*phoneTreePtr, phoneNumber);
+    if (check2 == NULL) {
       printf("Deleted customer from tree.\n");
       printf("It took %ld uS to delete the customer from the tree by name.\n",
              total);
