@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -g
 POSTFLAGS = -lreadline
 DEPS = LLNode.h structs.h tree.h
-OBJ = fastlookup.c parser.c tree.c
+OBJ = fastLookup.c parser.c tree.c
 
 %.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) -c -o $@ $< $(POSTFLAGS)
