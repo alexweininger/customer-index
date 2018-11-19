@@ -51,6 +51,7 @@ TNode *deleteTreeByPhone(TNode *treePtr, long int phone) {
       free(treePtr);
       return temp;
     }
+
     TNode *temp = getSmallestNode(treePtr->right);
     treePtr->data = temp->data;
     treePtr->phone = temp->phone;
@@ -73,13 +74,10 @@ TNode *getSmallestNode(TNode *node) {
  * search tree by phone number
  */
 TNode *searchTreeByPhone(TNode *tree, long int phoneNum) {
-  printf("searching by phone\n");
   if (tree == NULL) {
-    printf("Customer with phone number %ld not found.\n", phoneNum);
     return NULL;
   }
   if (tree->phone == phoneNum) { // check if found customer
-    printf("Customer with phone number %ld found.\n", phoneNum);
     return tree;
   }
   if (tree->phone < phoneNum)
@@ -94,13 +92,10 @@ TNode *searchTreeByPhone(TNode *tree, long int phoneNum) {
 TNode *searchTreeByName(TNode *tree, char *name) {
   if (tree == NULL)
     return NULL;
-
   if (strcmp(tree->lname, name) == 0)
     return tree; // if found
-
   if (strcmp(tree->lname, name) < 0) // look left
     return searchTreeByName(tree->left, name);
-
   return searchTreeByName(tree->right, name); // look right
 }
 

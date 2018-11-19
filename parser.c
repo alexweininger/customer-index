@@ -135,12 +135,13 @@ void deleteByName(DLList **listPtr, char *name) {
   if (prevNode != NULL) {
     prevNode->next = node->next;
   } else {
-    printf("prevNode == NULL\n");
     node->next->prev = NULL;
   }
 
   if (node->next != NULL)
     node->next->prev = prevNode;
+  freeCustomer(node->data);
+  free(node);
   printf("Deleted customer from list with name: %s\n", name);
 }
 
@@ -157,12 +158,14 @@ void deleteByPhone(DLList **listPtr, long int phone) {
   if (prevNode != NULL) {
     prevNode->next = node->next;
   } else {
-    printf("prevNode == NULL\n");
     node->next->prev = NULL;
   }
 
   if (node->next != NULL)
     node->next->prev = prevNode;
+
+  freeCustomer(node->data);
+  free(node);
   printf("Deleted customer from list with phone: %ld\n", phone);
 }
 
