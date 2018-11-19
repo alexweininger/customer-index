@@ -20,10 +20,9 @@ int main(int argc, char *argv[]) {
   gettimeofday(&end, NULL);
   printf("It took %ld uS to load the file.\n", totalTime(start, end));
   printf("------------------------------------------------------\n\n");
-
-  TNode *nameTree = createNameTree(list);   // make a search tree by name
-  TNode *phoneTree = createPhoneTree(list); // make a phone tree
-  commands(&nameTree, &phoneTree, &list);   // start the user input loop
+  TNode *nameTree = createTree(list, 0);  // make a search tree by name
+  TNode *phoneTree = createTree(list, 1); // make a phone tree
+  commands(&nameTree, &phoneTree, &list); // start the user input loop
 }
 
 // method to read and execute commands from user input
@@ -123,7 +122,7 @@ int commands(TNode **nameTreePtr, TNode **phoneTreePtr, DLList **customerList) {
     deleteByName(customerList, name);
     gettimeofday(&end, NULL);
 
-    printf("Took %ld uS to delete customer from list by name.\n",
+    printf("Took %ld uS to delete from list by name.\n",
            totalTime(start, end));
 
     // delete from tree

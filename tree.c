@@ -32,7 +32,6 @@ TNode *searchTreeByName(TNode *tree, char *name) {
 TNode *deleteTreeByName(TNode *treePtr, char *name) {
   if (treePtr == NULL)
     return treePtr;
-
   if (strcmp(treePtr->data->data->lname, name) < 0) {
     treePtr->left = deleteTreeByName(treePtr->left, name);
   } else if (strcmp(treePtr->data->data->lname, name) > 0) {
@@ -91,27 +90,18 @@ TNode *newTNode(DLList *d, int isPhone) {
     toReturn->phone = d->data->phone;
   else
     toReturn->lname = d->data->lname;
-
-  toReturn->left = NULL;
-  toReturn->right = NULL;
+  toReturn->right = toReturn->left = NULL;
   return toReturn;
 }
 
-// creates a binary search tree with data stored in array a
-TNode *createNameTree(DLList *list) {
+TNode *createTree(DLList *clist, int phoneTree) {
   TNode *toReturn = NULL;
-  while (list != NULL) {
-    insertTreeName(list, &toReturn);
-    list = list->next;
-  }
-  return toReturn;
-}
-
-TNode *createPhoneTree(DLList *list) {
-  TNode *toReturn = NULL;
-  while (list != NULL) {
-    insertTreePhone(newTNode(list, 1), &toReturn);
-    list = list->next;
+  while (clist != NULL) {
+    if (phoneTree)
+      insertTreePhone(newTNode(clist, 1), &toReturn);
+    else
+      insertTreeName(clist, &toReturn);
+    clist = clist->next;
   }
   return toReturn;
 }
@@ -143,7 +133,6 @@ void insertTreePhone(TNode *toInsert, TNode **tptr) {
 // inserts name into bst
 void insertTreeName(DLList *d, TNode **tptr) {
   TNode *toInsert = newTNode(d, 0);
-
   TNode *curr = *tptr;
   if (curr == NULL) {
     *tptr = toInsert;
