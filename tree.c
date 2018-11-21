@@ -72,7 +72,6 @@ TNode *deleteTreeByPhone(TNode *treePtr, long int phone) {
       free(treePtr);
       return temp;
     } else if (treePtr->right == NULL) { // if it does not have a right child
-
       TNode *temp = treePtr->left;
       free(treePtr);
       return temp;

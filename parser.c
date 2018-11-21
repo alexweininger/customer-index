@@ -56,7 +56,6 @@ void insertTail(DLList **head_ref, customer *newCustomer) {
   return;
 }
 
-
 // allocates a node with given flight and returns the node
 DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
   DLList *np = (DLList *)malloc(sizeof(DLList));
@@ -83,22 +82,28 @@ DLList *makeDLList(customer *c, DLList *next, DLList *prev) {
 // deletes a node from the linked list by name
 void deleteByName(DLList **listPtr, char *name) {
   DLList *node = NULL;
-  node = searchListByName(*listPtr, name);
+  node = searchListByName(*listPtr, name); // find
 
   if (node == NULL) {
     printf("Could not find customer. Did not delete.\n");
     return;
   }
 
+  // prev node (->next = next node)
+
+  // middle (delete)
+
+  // next node (->prev = prev node)
+
   DLList *prevNode = node->prev;
-  if (prevNode != NULL) {
+  if (prevNode != NULL)
     prevNode->next = node->next;
-  } else {
+  else
     node->next->prev = NULL;
-  }
 
   if (node->next != NULL)
     node->next->prev = prevNode;
+
   freeCustomer(node->data);
   free(node);
   printf("Deleted customer from list with name: %s\n", name);
@@ -196,7 +201,6 @@ void freeCustomer(customer *t) {
   free(t->web);
   free(t);
 }
-
 
 /*
   parse a line from a file and load the customer object
