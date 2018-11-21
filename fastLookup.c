@@ -5,7 +5,7 @@
  * 11/14/2018
  */
 
-#include "tree.h"
+#include "fastLookup.h"
 
 static char *line = (char *)NULL;
 
@@ -110,7 +110,8 @@ int commands(TNode **nameTreePtr, TNode **phoneTreePtr, DLList **customerList) {
       break;
     }
 
-    nodeToDelete = searchListByName(*customerList, name);
+    TNode *treeDelete = searchTreeByName(*nameTreePtr, name);
+    nodeToDelete = treeDelete->data;
 
     if (nodeToDelete == NULL) {
       printf("Could not find customer with name: %s\n", name);
@@ -151,7 +152,9 @@ int commands(TNode **nameTreePtr, TNode **phoneTreePtr, DLList **customerList) {
     }
 
     // find node to delete
-    nodeToDelete = searchListByPhone(*customerList, phoneNumber);
+    TNode *tDel = searchTreeByPhone(*phoneTreePtr, phoneNumber);
+    nodeToDelete = tDel->data;
+
     if (nodeToDelete == NULL) {
       printf("Could not find customer with phone: %ld.\n", phoneNumber);
       break;
